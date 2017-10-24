@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AtlanTeam</string>
+    <string name="title_contacts">Контакты</string>
+    <string name="title_home">Главная</string>
+    <string name="loading">Загрузка...</string>
+</resources>

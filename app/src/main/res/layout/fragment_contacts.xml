@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/primaryLightColor">
+
+    <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp">
+
+        <android.support.constraint.ConstraintLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+
+            <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    app:srcCompat="@drawable/photo"
+                    android:id="@+id/photo"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginLeft="16dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginRight="16dp"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView"
+                    android:text="Имя: "
+                    android:layout_marginTop="32dp"
+                    android:layout_marginLeft="16dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/photo"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/name"
+                    android:text="@string/name"
+                    app:layout_constraintLeft_toRightOf="@+id/textView"
+                    android:layout_marginLeft="16dp"
+                    app:layout_constraintTop_toTopOf="@+id/textView"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="16dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:fontFamily="monospace"/>
+
+            <TextView
+                    android:text="tlgm:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2"
+                    tools:layout_editor_absoluteY="60dp"
+                    tools:layout_editor_absoluteX="31dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/textView"
+                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    android:layout_marginTop="16dp"/>
+
+            <TextView
+                    android:text="@string/vtchkn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/telegram"
+                    app:layout_constraintLeft_toRightOf="@+id/textView2"
+                    android:layout_marginLeft="0dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintTop_toBottomOf="@+id/name"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="monospace"/>
+
+            <TextView
+                    android:text="e-mail:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView4"
+                    tools:layout_editor_absoluteY="86dp"
+                    tools:layout_editor_absoluteX="25dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/textView"
+                    app:layout_constraintTop_toBottomOf="@+id/telegram"
+                    android:layout_marginTop="16dp"/>
+
+            <TextView
+                    android:text="wevaw1@yandex.ru"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/comment_email"
+                    android:layout_marginLeft="0dp"
+                    app:layout_constraintTop_toBottomOf="@+id/telegram"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="monospace"/>
+
+            <TextView
+                    android:text="skype:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView6"
+                    app:layout_constraintLeft_toLeftOf="@+id/textView"
+                    app:layout_constraintTop_toBottomOf="@+id/textView4"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="32dp"
+                    app:layout_constraintVertical_bias="0.521"/>
+
+            <TextView
+                    android:text="evgeniyvetochkin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/skype"
+                    android:layout_marginLeft="0dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/name"
+                    app:layout_constraintTop_toBottomOf="@+id/comment_email"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="32dp"
+                    app:layout_constraintVertical_bias="0.0"
+                    android:fontFamily="monospace"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>
