@@ -10,16 +10,16 @@ public interface AtlanApi {
     @GET("users/{id}")
     Call<User> users(@Path("id") int user);
 
-    @GET("posts")
-    Call<Post> posts(int post);
+    @GET("posts/{id}")
+    Call<Post> posts(@Path("id") int post);
 
-    @GET("comments")
-    Call<Comment> comments(int comment);
+    @GET("comments/{id}")
+    Call<Comment> comments(@Path("id") int comment);
 
-    @GET("photos")
-    Call<Photo> photos(int photo);
+    @GET("photos/{id}")
+    Call<Photo> photos(@Path("id") int photo);
 
-    @GET("todos")
-    Call<Todo> todos(int todo);
+    @GET("todos/{id}")
+    Call<Todo> todos(@Path("id") int todo);
 
 }

@@ -3,19 +3,15 @@ package com.evetochkin.atlan.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -25,11 +21,15 @@ import com.evetochkin.atlan.AtlanApp;
 import com.evetochkin.atlan.R;
 import com.evetochkin.atlan.adapters.UsersAdapter;
 import com.evetochkin.atlan.api.AtlanApi;
-import com.evetochkin.atlan.model.User;
+import com.evetochkin.atlan.model.*;
+import com.squareup.picasso.Picasso;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * - Для posts – отобразить результат для n-го поста (должна быть возможность вписать n в карточку и нажать «Подтвердить» для отображения результата).
@@ -50,7 +50,21 @@ import java.util.List;
 public class MainFragment extends BaseFragment {
 
 
+    public static final String POST_NUMBER = "POST_NUMBER";
+    public static final String COMMENT_NUMBER = "COMMENT_NUMBER";
     private static List<User> datum = new ArrayList<>();
+    @BindView(R.id.comment_name)
+    TextView comment_name;
+    @BindView(R.id.comment_body)
+    TextView comment_body;
+    @BindView(R.id.comment_email)
+    TextView comment_email;
+    @BindView(R.id.main_photo)
+    ImageView main_photo;
+    @BindView(R.id.Todo)
+    TextView mainTodo;
+    @BindView(R.id.todos)
+    CardView todos;
     @BindView(R.id.post_title)
     TextView post_title;
     @BindView(R.id.post_body)
@@ -74,7 +88,7 @@ public class MainFragment extends BaseFragment {
     @BindView(R.id.comment_msg)
     TextView commentMsg;
     private UsersAdapter adapter = new UsersAdapter();
-    
+
     private AtlanApi api;
 
 
@@ -110,60 +124,137 @@ public class MainFragment extends BaseFragment {
     }
 
     private void loadItems() {
+        loadPosts(1);
+        loadComments(1);
         loadUsers();
-
+        loadPhotos(3);
+        Random random = new Random();
+        loadTodos(random.nextInt(200) + 1);
 
     }
 
-    private void loadPosts(int id) {
+    private void loadTodos(int id) {
+        Call<Todo> call = api.todos(id);
+        call.enqueue(new Callback<com.evetochkin.atlan.model.Todo>() {
+            @Override
+            public void onResponse(Call<Todo> call, Response<Todo> response) {
+                Todo todo = response.body();
+                if (todo == null) {
+                    Toast.makeText(getContext(), "load_error", Toast.LENGTH_SHORT).show();
+                } else {
+                    mainTodo.setText(todo.getTitle());
+                    if (todo.getCompleted()) {
+                        mainTodo.setTextColor(getContext().getResources().getColor(R.color.secondaryColor));
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<Todo> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void loadPhotos(int id) {
+        Call<Photo> call = api.photos(id);
+        call.enqueue(new Callback<Photo>() {
+            @Override
+            public void onResponse(Call<Photo> call, Response<Photo> response) {
+                Photo photo = response.body();
+                if (photo == null) {
+                    Toast.makeText(getContext(), "load_error", Toast.LENGTH_SHORT).show();
+                } else {
+                    Picasso.with(getContext())
+                            .load(photo.getUrl())
+                            .resize(600, 600)
+                            .centerCrop()
+                            .into(main_photo);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Photo> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void loadComments(int id) {
+        Call<Comment> call = api.comments(id);
+        call.enqueue(new Callback<Comment>() {
+            @Override
+            public void onResponse(Call<Comment> call, Response<Comment> response) {
+                Comment comment = response.body();
+                if (comment == null) {
+                    Toast.makeText(getContext(), "load_error", Toast.LENGTH_SHORT).show();
+                } else {
+                    comment_name.setText(comment.getName());
+                    comment_body.setText(comment.getBody());
+                    comment_email.setText(comment.getEmail());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Comment> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void loadPosts(int id) {
+        Call<Post> call = api.posts(id);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                Post post = response.body();
+                if (post == null) {
+                    Toast.makeText(getContext(), "load_error", Toast.LENGTH_SHORT).show();
+                } else {
+                    post_title.setText(post.getTitle());
+                    post_body.setText(post.getBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+
+            }
+        });
     }
 
     private void loadUsers() {
         showProgressDialog();
-        for (int i = 0; i < 5; i++) {
-            final int finalI = i++;
-            getLoaderManager().restartLoader(AtlanApp.LOADER_USERS, null, new LoaderManager.LoaderCallbacks<User>() {
-                @Override
-                public Loader<User> onCreateLoader(int id, Bundle bundle) {
-                    return new AsyncTaskLoader<User>(getContext()) {
-                        @Override
-                        public User loadInBackground() {
-                            try {
-                                return api.users(finalI).execute().body();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                return null;
-                            }
-                        }
-                    };
-                }
+        adapter.clear();
 
+        Call<User>[] calls = new Call[]{api.users(1), api.users(2), api.users(3), api.users(4), api.users(5)};
+        for (Call<User> call : calls) {
+            call.enqueue(new Callback<User>() {
                 @Override
-                public void onLoadFinished(Loader<User> loader, User user) {
+                public void onResponse(Call<User> call, Response<User> response) {
+                    User user = response.body();
                     if (user == null) {
                         Toast.makeText(getContext(), "load_error", Toast.LENGTH_SHORT).show();
                     } else {
                         datum.add(user);
-                        //                    adapter.clear();
-                        //                    adapter.addAll(datum);
-                        Log.d("usersList", String.valueOf(datum.size()));
-                        Log.d("usersAdapter", String.valueOf(adapter.getItemCount()));
+                        adapter.add(user);
                     }
-
                 }
 
                 @Override
-                public void onLoaderReset(Loader<User> loader) {
+                public void onFailure(Call<User> call, Throwable t) {
 
                 }
-            }).forceLoad();
-            hideProgressDialog();
+            });
         }
+        hideProgressDialog();
+
+
     }
 
     private void initUI() {
-
+        post_number.setTag(POST_NUMBER);
+        comment_number.setTag(COMMENT_NUMBER);
         TextView.OnEditorActionListener listener = new FormEditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -182,35 +273,19 @@ public class MainFragment extends BaseFragment {
             }
         };
         post_number.setOnEditorActionListener(listener);
+        comment_number.setOnEditorActionListener(listener);
     }
 
     public void onClickValidate(View v) {
-        FormEditText[] allFields = {post_number, comment_number};
-
-
-        boolean allValid = true;
-        for (FormEditText field : allFields) {
-            allValid = field.testValidity() && allValid;
-        }
-
-        if (allValid) {
-            // YAY
-
-        } else {
-            // EditText are going to appear with an exclamation mark and an explicative message.
-
-            if (TextUtils.isEmpty(post_number.getText())) {
-                postMsg.setText(getString(R.string.number_error_empty));
-            } else {
-                postMsg.setText(getString(R.string.number_error_message));
-            }
-            if (TextUtils.isEmpty(comment_number.getText())) {
-                commentMsg.setText(getString(R.string.number_error_empty));
-            }else {
-                commentMsg.setText(getString(R.string.number_error_message));
+        FormEditText fdt = (FormEditText) v;
+        if (fdt.testValidity()) {
+            if (fdt.getTag().equals(POST_NUMBER)) {
+                loadPosts(Integer.parseInt(fdt.getText().toString()));
+            } else if (fdt.getTag().equals(COMMENT_NUMBER)) {
+                loadComments(Integer.parseInt(fdt.getText().toString()));
             }
 
-
         }
+
     }
 }

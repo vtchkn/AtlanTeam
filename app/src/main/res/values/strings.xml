@@ -7,4 +7,6 @@
     <string name="vtchkn">\@vtchkn</string>
     <string name="number_error_message">Номер не может быть меньше 1 и больше 100</string>
     <string name="number_error_empty">Вы ничего не ввели</string>
+    <string name="post_msg">Пост №:</string>
+    <string name="comment_msg">Комментарий №:</string>
 </resources>
