@@ -107,21 +107,12 @@ public class MainFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, rootView);
-//        recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_users);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
-//        post_number = rootView.findViewById(R.id.post_number);
         return rootView;
     }
 
-    private void initData() {
-//        datum = new ArrayList<>();
-    }
-
-    private void initAdapter() {
-
-    }
 
     private void loadItems() {
         loadPosts(1);
@@ -142,10 +133,15 @@ public class MainFragment extends BaseFragment {
                 if (todo == null) {
                     Toast.makeText(getContext(), "load_error", Toast.LENGTH_SHORT).show();
                 } else {
-                    mainTodo.setText(todo.getTitle());
+                    String text;
                     if (todo.getCompleted()) {
+                        text = "✓" + todo.getTitle();
                         mainTodo.setTextColor(getContext().getResources().getColor(R.color.secondaryColor));
+                    } else {
+                        text = "—" + todo.getTitle();
+
                     }
+                        mainTodo.setText(text);
                 }
             }
 
@@ -255,7 +251,7 @@ public class MainFragment extends BaseFragment {
     private void initUI() {
         post_number.setTag(POST_NUMBER);
         comment_number.setTag(COMMENT_NUMBER);
-        TextView.OnEditorActionListener listener = new FormEditText.OnEditorActionListener() {
+        FormEditText.OnEditorActionListener listener = new FormEditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH ||
@@ -263,13 +259,12 @@ public class MainFragment extends BaseFragment {
                         event.getAction() == KeyEvent.ACTION_DOWN &&
                                 event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     if (!event.isShiftPressed()) {
-                        // the user is done typing.
                         onClickValidate(v);
 
-                        return true; // consume.
+                        return true;
                     }
                 }
-                return false; // pass on to other listeners.
+                return false;
             }
         };
         post_number.setOnEditorActionListener(listener);
